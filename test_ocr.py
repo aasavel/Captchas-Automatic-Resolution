@@ -80,3 +80,11 @@ for img_path in images[:NB_IMAGES_TEST]:
     print("-" * 40)
 
 print("\n Test terminé")
+
+
+
+
+
+
+
+
