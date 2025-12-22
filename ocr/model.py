@@ -1,73 +1,28 @@
-from keras import layers
 import keras
-from .ctc import CTCLayer
+from keras import layers
+from .ctc_layer import CTCLayer
+from .vocab import num_classes
 
+IMG_WIDTH = 200
+IMG_HEIGHT = 50
 
-def build_model(img_width, img_height, char_to_num):
-    # ================= INPUTS =================
-    input_img = layers.Input(
-        shape=(img_width, img_height, 1),
-        name="image",
-        dtype="float32",
-    )
-    labels = layers.Input(
-        name="label",
-        shape=(None,),
-        dtype="float32",
-    )
+def build_ocr_model():
+    img = layers.Input((IMG_WIDTH, IMG_HEIGHT, 1), name="image")
+    lbl = layers.Input((None,), dtype="int32", name="label")
 
-    # ================= CNN =================
-    x = layers.Conv2D(
-        32, (3, 3),
-        activation="relu",
-        padding="same",
-        kernel_initializer="he_normal",
-    )(input_img)
-    x = layers.MaxPooling2D((2, 2))(x)
+    x = layers.Conv2D(64, 3, padding="same", activation="relu")(img)
+    x = layers.MaxPooling2D((2,2))(x)
 
-    x = layers.Conv2D(
-        64, (3, 3),
-        activation="relu",
-        padding="same",
-        kernel_initializer="he_normal",
-    )(x)
-    x = layers.MaxPooling2D((2, 2))(x)
+    x = layers.Conv2D(128, 3, padding="same", activation="relu")(x)
+    x = layers.MaxPooling2D((2,1))(x)
 
-    # ================= RESHAPE =================
-    new_shape = (
-        img_width // 4,
-        (img_height // 4) * 64,
-    )
-    x = layers.Reshape(target_shape=new_shape)(x)
-    x = layers.Dense(64, activation="relu")(x)
-    x = layers.Dropout(0.2)(x)
+    x = layers.Reshape((IMG_WIDTH//4, (IMG_HEIGHT//2)*128))(x)
+    x = layers.Dense(128, activation="relu")(x)
 
-    # ================= RNN =================
-    x = layers.Bidirectional(
-        layers.LSTM(128, return_sequences=True, dropout=0.25)
-    )(x)
-    x = layers.Bidirectional(
-        layers.LSTM(64, return_sequences=True, dropout=0.25)
-    )(x)
+    x = layers.Bidirectional(layers.LSTM(256, return_sequences=True))(x)
+    x = layers.Bidirectional(layers.LSTM(128, return_sequences=True))(x)
 
-    # ================= SOFTMAX =================
-    x = layers.Dense(
-        len(char_to_num.get_vocabulary()) + 1,
-        activation="softmax",
-        name="softmax",
-    )(x)
+    y = layers.Dense(num_classes, activation="softmax")(x)
+    out = CTCLayer()(lbl, y)
 
-    # ================= CTC =================
-    output = CTCLayer(name="ctc_loss")(labels, x)
-
-    model = keras.models.Model(
-        inputs=[input_img, labels],
-        outputs=output,
-        name="ocr_train_model",
-    )
-
-    model.compile(
-        optimizer=keras.optimizers.Adam()
-    )
-
-    return model
+    return keras.Model([img, lbl], out)

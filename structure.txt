@@ -1,0 +1,42 @@
+captcha_solver/
+│
+├── README.md
+├── requirements.txt
+├── .env
+├── .gitignore
+│
+├── models/
+│   └── ocr_captcha_v1.keras        # 🔒 modèle figé
+│
+├── ocr/
+│   ├── __init__.py
+│   ├── model.py                    # CTCLayer + build_model (SI besoin load)
+│   ├── preprocess.py               # preprocess_image()
+│   ├── decoder.py                  # greedy / beam search
+│   ├── predictor.py                # OCRPredictor (classe clean)
+│
+├── scraping/
+│   ├── __init__.py
+│   ├── selenium_client.py          # setup driver
+│   ├── captcha_collector.py        # récupère image captcha
+│   └── solver.py                   # scrape → OCR → submit
+│
+├── api/
+│   ├── __init__.py
+│   ├── main.py                     # FastAPI entrypoint
+│   ├── schemas.py                  # Pydantic models
+│   └── routes.py                   # endpoints OCR
+│
+├── ui/
+│   ├── streamlit_app.py             # Streamlit UI
+│   └── assets/
+│
+├── scripts/
+│   ├── test_ocr.py                  # tests manuels OCR
+│   ├── batch_predict.py             # OCR dossier images
+│   └── sanity_check.py
+│
+└── tests/
+    ├── test_preprocess.py
+    ├── test_decoder.py
+    └── test_api.py
