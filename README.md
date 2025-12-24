@@ -13,6 +13,13 @@ This repo contains webscraping (selenium), OCR model &amp; API (FastApi) to reso
               /___|___\
                (__) (__)
 
+## OCR MODEL
+
+===== VALIDATION PERFORMANCE =====
+{'CER': 0.02111141598205207, 'Character Accuracy': 0.978888584017948, 'Exact Match Accuracy': 0.9026779882429784, 'Samples': 12248}
+
+===== TEST PERFORMANCE =====
+{'CER': 0.020052268180938245, 'Character Accuracy': 0.9799477318190618, 'Exact Match Accuracy': 0.9075918367346939, 'Samples': 12250}
 
 ## 📁 Project Structure
 
