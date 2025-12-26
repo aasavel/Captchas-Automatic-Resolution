@@ -1,6 +1,10 @@
 from fastapi import FastAPI
-from api.app.api.routes import captcha, scrape, training
+from api.app.api.routes import captcha
 
-app = FastAPI()
+app = FastAPI(title="Captcha Solver API")
 
-app.include_router(captcha.router, prefix="/captcha", tags=["CAPTCHA"])
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+app.include_router(captcha.router)

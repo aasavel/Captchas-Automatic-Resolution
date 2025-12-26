@@ -1,26 +1,8 @@
-from fastapi import APIRouter, UploadFile, File
-import shutil
-import tempfile
-import os
+from fastapi import APIRouter, Query
+from api.app.services.ocr_service import solve_captcha_from_url
 
-from api.app.services.ocr_service import solve_captcha
+router = APIRouter(prefix="/captcha", tags=["captcha"])
 
-router = APIRouter()
-
-@router.post("/solve")
-def solve(file: UploadFile = File(...)):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
-        shutil.copyfileobj(file.file, tmp)
-        tmp_path = tmp.name
-
-    try:
-        text, confidence = solve_captcha(tmp_path)
-    finally:
-        os.remove(tmp_path)
-
-    return {
-        "captcha_type": "text",
-        "prediction": text,
-        "confidence": confidence,
-        "model_version": "ocr_ctc_finetuned"
-    }
+@router.post("/solve-from-url")
+def solve_from_url(url: str = Query(...)):
+    return solve_captcha_from_url(url)
