@@ -1,7 +1,7 @@
 from scraper.scrape_captcha import scrape_captcha
 from ocr.predictor import OCRPredictor
 
-ocr = OCRPredictor("models/ocr_ctc_finetuned.keras")
+ocr = OCRPredictor("models/ocr_ctc_robust_best.keras")
 
 def solve_captcha_from_url(url: str) -> dict:
     image_path = scrape_captcha(url)
