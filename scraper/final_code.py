@@ -8,7 +8,6 @@
 # https://www.youtube.com/watch?v=3mGZkmfrYIA&sttick=1
 
 from selenium import webdriver
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
