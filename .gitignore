@@ -4,3 +4,4 @@ Aide/
 __pycache__/
 *.pyc
 .env
+tmp/
