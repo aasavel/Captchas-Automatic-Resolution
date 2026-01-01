@@ -11,7 +11,7 @@ Total selectors: 20
 Projet M2 MoSEF 2025-2026
 """
 
-consent_selectors = [
+CONSENT_SELECTORS = [
     '//*[@id=\'onetrust-banner-sdk #onetrust-pc-btn-handler, .ot-sdk-show-settings:not([href])\']',
     '//*[contains(@class, \'save-preference-btn-handler\')]',
     '//*[contains(@class, \'qc-cmp-save-and-exit\')]',
